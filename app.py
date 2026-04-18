@@ -151,22 +151,25 @@ def serve_frontend():
     <title>Orator - AI Speech Detector</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy: #1a2744;
-            --navy-light: #243350;
-            --gold: #c9a227;
-            --gold-light: #e8d5a3;
-            --gold-pale: #f5eed3;
-            --text: #2d3748;
+            --navy: #0B1F3A;
+            --navy-secondary: #08172B;
+            --navy-hover: #0a1a33;
+            --gold: #C6A75B;
+            --gold-light: #D4BC7E;
+            --gold-pale: #E8DCC8;
+            --gold-soft: #F5F1EA;
+            --text: #1a202c;
             --text-light: #4a5568;
             --text-muted: #718096;
-            --bg: #fafbfc;
-            --border: #e2e8f0;
+            --bg: #F7F6F2;
+            --card-bg: #FFFFFF;
+            --border: #E4E6EA;
             --white: #ffffff;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow: 0 1px 3px rgba(11, 31, 58, 0.08);
+            --shadow-lg: 0 4px 12px rgba(11, 31, 58, 0.12);
         }
 
         * {
@@ -184,42 +187,43 @@ def serve_frontend():
         }
 
         .container {
-            max-width: 720px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
         }
 
         /* Header */
         header {
             text-align: center;
-            padding: 2rem 0 1.5rem;
+            padding: 2.5rem 0 2rem;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .logo {
-            font-family: 'Crimson Text', Georgia, serif;
-            font-size: 2rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.25rem;
             font-weight: 600;
             color: var(--navy);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
         }
 
         .tagline {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            font-style: italic;
+            font-weight: 400;
         }
 
         /* Warning Banner */
         .warning-banner {
-            background: var(--gold-pale);
+            background: var(--gold-soft);
             border-left: 3px solid var(--gold);
-            padding: 0.75rem 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.8rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
             color: var(--text-light);
-            border-radius: 0 4px 4px 0;
+            border-radius: 0 8px 8px 0;
         }
 
         .warning-banner strong {
@@ -228,28 +232,98 @@ def serve_frontend():
 
         /* Input Section */
         .input-section {
-            background: var(--white);
-            border-radius: 8px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
             box-shadow: var(--shadow);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .section-title {
-            font-size: 0.75rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.1rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
         }
 
-        /* Recording Controls */
+        /* Recording Section */
+        .recording-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        /* Circular Recording Button */
+        .record-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s ease, transform 0.1s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .record-button:hover:not(:disabled) {
+            background: var(--navy-hover);
+        }
+
+        .record-button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .record-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .record-button.recording {
+            background: #c53030;
+            animation: recordPulse 2s ease-in-out infinite;
+        }
+
+        .record-button.recording:hover:not(:disabled) {
+            background: #9b2c2c;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(197, 48, 48, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 24px rgba(197, 48, 48, 0.5);
+            }
+        }
+
+        .record-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .record-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Secondary Controls */
         .recording-controls {
             display: flex;
             gap: 0.75rem;
-            margin-bottom: 1rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         button {
@@ -258,9 +332,9 @@ def serve_frontend():
             font-weight: 500;
             padding: 0.625rem 1.25rem;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: background 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -269,15 +343,6 @@ def serve_frontend():
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: var(--navy);
-            color: var(--white);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: var(--navy-light);
         }
 
         .btn-secondary {
@@ -290,74 +355,41 @@ def serve_frontend():
             background: var(--bg);
         }
 
-        .btn-danger {
-            background: #c53030;
+        .btn-primary {
+            background: var(--navy);
             color: var(--white);
         }
 
-        .btn-danger:hover:not(:disabled) {
-            background: #9b2c2c;
-        }
-
-        .btn-gold {
-            background: var(--gold);
-            color: var(--navy);
-            width: 100%;
-            justify-content: center;
-            padding: 0.875rem;
-            font-weight: 600;
-        }
-
-        .btn-gold:hover:not(:disabled) {
-            background: #b8941f;
+        .btn-primary:hover:not(:disabled) {
+            background: var(--navy-hover);
         }
 
         /* Recording Status */
         .recording-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            text-align: center;
             font-size: 0.875rem;
-            color: var(--text-light);
+            color: var(--text-muted);
+            margin-top: 1rem;
             min-height: 1.5rem;
-        }
-
-        .recording-indicator {
-            width: 8px;
-            height: 8px;
-            background: #c53030;
-            border-radius: 50%;
-            animation: pulse 1.5s ease-in-out infinite;
-            display: none;
-        }
-
-        .recording-indicator.active {
-            display: block;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
         }
 
         /* Textarea */
         textarea {
             width: 100%;
-            min-height: 180px;
-            padding: 0.875rem;
+            min-height: 200px;
+            padding: 1rem;
             border: 1px solid var(--border);
-            border-radius: 6px;
-            font-family: 'Crimson Text', Georgia, serif;
+            border-radius: 8px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 1rem;
             line-height: 1.7;
             resize: vertical;
-            transition: border-color 0.15s ease;
+            background: var(--card-bg);
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--gold);
-            box-shadow: 0 0 0 3px var(--gold-pale);
         }
 
         textarea::placeholder {
@@ -366,14 +398,28 @@ def serve_frontend():
 
         /* Analysis Button */
         .analyze-section {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-analyze {
+            background: var(--navy);
+            color: var(--white);
+            width: 100%;
+            justify-content: center;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .btn-analyze:hover:not(:disabled) {
+            background: var(--navy-hover);
         }
 
         /* Loading State */
         .loading {
             display: none;
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
         }
 
         .loading.active {
@@ -381,13 +427,13 @@ def serve_frontend():
         }
 
         .loading-spinner {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border: 2px solid var(--border);
-            border-top-color: var(--gold);
+            border-top-color: var(--navy);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin: 0 auto 0.75rem;
+            margin: 0 auto 1rem;
         }
 
         @keyframes spin {
@@ -395,18 +441,19 @@ def serve_frontend():
         }
 
         .loading-text {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
         /* Results Section */
         .results {
             display: none;
-            background: var(--white);
-            border-radius: 8px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
             box-shadow: var(--shadow);
-            padding: 1.25rem;
-            margin-top: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .results.active {
@@ -416,119 +463,122 @@ def serve_frontend():
         /* Score Display */
         .score-display {
             text-align: center;
-            padding: 1.5rem 0;
+            padding: 2rem 0;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .score-value {
-            font-family: 'Crimson Text', Georgia, serif;
-            font-size: 3.5rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 4rem;
             font-weight: 600;
             color: var(--navy);
             line-height: 1;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .score-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             color: var(--text-muted);
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .interpretation {
             display: inline-block;
-            padding: 0.375rem 1rem;
-            border-radius: 4px;
-            font-size: 0.875rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             font-weight: 500;
         }
 
         .interpretation.low {
-            background: #c6f6d5;
-            color: #22543d;
+            background: #E8F0E8;
+            color: #2D5A3D;
         }
 
         .interpretation.moderate {
-            background: var(--gold-pale);
-            color: #744210;
+            background: var(--gold-soft);
+            color: #7A6438;
         }
 
         .interpretation.high {
-            background: #fed7d7;
-            color: #742a2a;
+            background: #F5E8E8;
+            color: #7A3D3D;
         }
 
         /* Interpretation Guide */
         .interpretation-guide {
             display: flex;
             justify-content: space-between;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
-            padding: 1rem;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
             background: var(--bg);
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .guide-item {
             flex: 1;
             text-align: center;
             padding: 0.5rem;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
 
         .guide-color {
             width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 0.375rem;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
         }
 
         .guide-color.low {
-            background: linear-gradient(to right, #c6f6d5, #9ae6b4);
+            background: #4A7C59;
         }
 
         .guide-color.moderate {
-            background: linear-gradient(to right, var(--gold-pale), var(--gold-light));
+            background: var(--gold);
         }
 
         .guide-color.high {
-            background: linear-gradient(to right, #fed7d7, #feb2b2);
+            background: #8B4A4A;
         }
 
         .guide-label {
-            color: var(--text-muted);
+            color: var(--text);
             font-weight: 500;
+            font-size: 0.8rem;
         }
 
         .guide-range {
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
         }
 
         /* Highlighted Text */
         .highlighted-text {
-            font-family: 'Crimson Text', Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 1rem;
             line-height: 1.8;
-            padding: 1rem;
+            padding: 1.25rem;
             background: var(--bg);
-            border-radius: 6px;
+            border-radius: 8px;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
 
         .chunk {
-            padding: 0.125rem 0.25rem;
-            margin: 0 -0.125rem;
-            border-radius: 3px;
-            transition: background 0.15s ease;
+            padding: 0.15rem 0.35rem;
+            margin: 0 -0.15rem;
+            border-radius: 4px;
+            border: 1px solid transparent;
         }
 
         .chunk:hover {
             cursor: help;
+            border-color: var(--gold);
         }
 
         .chunk.low {
@@ -536,21 +586,23 @@ def serve_frontend():
         }
 
         .chunk.moderate {
-            background: var(--gold-pale);
+            background: var(--gold-soft);
+            border-color: var(--gold-light);
         }
 
         .chunk.high {
-            background: #feebc8;
+            background: #F5EDE3;
+            border-color: var(--gold);
         }
 
         /* Legend */
         .legend {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
             border-top: 1px solid var(--border);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             flex-wrap: wrap;
         }
@@ -558,35 +610,37 @@ def serve_frontend():
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 0.375rem;
+            gap: 0.5rem;
         }
 
         .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
         }
 
         /* Explanation Note */
         .explanation-note {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            font-style: italic;
-            margin-top: 0.75rem;
-            padding: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
             background: var(--white);
-            border-radius: 4px;
+            border-radius: 6px;
+            border-left: 3px solid var(--gold);
         }
 
         /* Error State */
         .error-message {
             display: none;
-            background: #fed7d7;
-            color: #742a2a;
-            padding: 0.875rem 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
+            background: #F5E8E8;
+            color: #5C2A2A;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
             font-size: 0.875rem;
+            border-left: 3px solid #8B4A4A;
         }
 
         .error-message.active {
@@ -596,21 +650,21 @@ def serve_frontend():
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
             color: var(--text-muted);
-            font-size: 0.875rem;
+            font-size: 0.9rem;
         }
 
         /* Browser Support Warning */
         .browser-warning {
             display: none;
-            background: #fffaf0;
-            border: 1px solid #fbd38d;
-            color: #744210;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
+            background: var(--gold-soft);
+            border: 1px solid var(--gold-light);
+            color: #5C4A2A;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
         }
 
         .browser-warning.active {
@@ -620,16 +674,17 @@ def serve_frontend():
         /* Footer */
         footer {
             text-align: center;
-            padding: 2rem 0;
-            font-size: 0.75rem;
+            padding: 2.5rem 0;
+            font-size: 0.8rem;
             color: var(--text-muted);
             border-top: 1px solid var(--border);
-            margin-top: 2rem;
+            margin-top: 2.5rem;
         }
 
         footer a {
             color: var(--navy);
             text-decoration: none;
+            font-weight: 500;
         }
 
         footer a:hover {
@@ -639,24 +694,24 @@ def serve_frontend():
         /* Desktop adjustments */
         @media (min-width: 640px) {
             .container {
-                padding: 2rem;
+                padding: 2.5rem;
             }
 
             header {
-                padding: 3rem 0 2rem;
+                padding: 3rem 0 2.5rem;
             }
 
             .logo {
-                font-size: 2.5rem;
+                font-size: 2.75rem;
             }
 
             .input-section,
             .results {
-                padding: 1.5rem;
+                padding: 2rem;
             }
 
             textarea {
-                min-height: 220px;
+                min-height: 240px;
             }
         }
     </style>
@@ -676,44 +731,6 @@ def serve_frontend():
 
         <div class="browser-warning" id="browserWarning">
             Your browser does not support speech recognition. Please type or paste your text directly.
-        </div>
-
-        <section class="input-section">
-            <h2 class="section-title">Speech Input</h2>
-
-            <div class="recording-controls">
-                <button id="startBtn" class="btn-primary">
-                    <span>●</span> Start Recording
-                </button>
-                <button id="stopBtn" class="btn-danger" disabled>
-                    <span>■</span> Stop
-                </button>
-                <button id="clearBtn" class="btn-secondary">
-                    Clear
-                </button>
-            </div>
-
-            <div class="recording-status">
-                <span class="recording-indicator" id="recordingIndicator"></span>
-                <span id="statusText">Ready to record</span>
-            </div>
-
-            <h2 class="section-title" style="margin-top: 1rem;">Transcript</h2>
-            <textarea
-                id="transcript"
-                placeholder="Speak using the microphone button above, or type/paste your text here..."
-            ></textarea>
-
-            <div class="analyze-section">
-                <button id="analyzeBtn" class="btn-gold">
-                    Analyze Text
-                </button>
-            </div>
-        </section>
-
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Analyzing text...</p>
         </div>
 
         <section class="results" id="results">
@@ -752,11 +769,11 @@ def serve_frontend():
                     <span>No concern</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: var(--gold-pale);"></div>
+                    <div class="legend-color" style="background: var(--gold-soft);"></div>
                     <span>Some markers</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #feebc8;"></div>
+                    <div class="legend-color" style="background: #F5EDE3; border-color: var(--gold);"></div>
                     <span>Notable markers</span>
                 </div>
             </div>
@@ -764,6 +781,41 @@ def serve_frontend():
             <p class="explanation-note">
                 Highlights indicate text chunks that contributed to the overall score. This is a heuristic visualization, not proof of AI generation.
             </p>
+        </section>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Analyzing text...</p>
+        </div>
+
+        <section class="input-section">
+            <!-- Circular Recording Button (Main Focal Point) -->
+            <div class="recording-section">
+                <button id="recordBtn" class="record-button">
+                    <svg class="record-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="6"/>
+                    </svg>
+                    <span class="record-text">Record</span>
+                </button>
+                <div class="recording-status" id="statusText">Ready to record</div>
+                <div class="recording-controls">
+                    <button id="clearBtn" class="btn-secondary">
+                        Clear Text
+                    </button>
+                </div>
+            </div>
+
+            <h2 class="section-title">Transcript</h2>
+            <textarea
+                id="transcript"
+                placeholder="Speak using the record button above, or type/paste your text here..."
+            ></textarea>
+
+            <div class="analyze-section">
+                <button id="analyzeBtn" class="btn-analyze">
+                    Analyze Text
+                </button>
+            </div>
         </section>
 
         <footer>
@@ -777,13 +829,12 @@ def serve_frontend():
 
     <script>
         // DOM Elements
-        const startBtn = document.getElementById('startBtn');
-        const stopBtn = document.getElementById('stopBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const recordBtnText = recordBtn.querySelector('.record-text');
         const clearBtn = document.getElementById('clearBtn');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const transcript = document.getElementById('transcript');
         const statusText = document.getElementById('statusText');
-        const recordingIndicator = document.getElementById('recordingIndicator');
         const browserWarning = document.getElementById('browserWarning');
         const errorMessage = document.getElementById('errorMessage');
         const loading = document.getElementById('loading');
@@ -805,18 +856,16 @@ def serve_frontend():
 
             recognition.onstart = () => {
                 isRecording = true;
-                recordingIndicator.classList.add('active');
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
+                recordBtn.classList.add('recording');
+                recordBtnText.textContent = 'Stop';
                 statusText.textContent = 'Recording...';
                 hideError();
             };
 
             recognition.onend = () => {
                 isRecording = false;
-                recordingIndicator.classList.remove('active');
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
+                recordBtn.classList.remove('recording');
+                recordBtnText.textContent = 'Record';
                 statusText.textContent = 'Recording stopped';
             };
 
@@ -861,23 +910,21 @@ def serve_frontend():
             };
         } else {
             browserWarning.classList.add('active');
-            startBtn.disabled = true;
+            recordBtn.disabled = true;
         }
 
         // Recording Controls
-        function startRecording() {
-            if (recognition) {
+        function toggleRecording() {
+            if (!recognition) return;
+
+            if (isRecording) {
+                recognition.stop();
+            } else {
                 try {
                     recognition.start();
                 } catch (err) {
                     showError('Could not start recording: ' + err.message);
                 }
-            }
-        }
-
-        function stopRecording() {
-            if (recognition && isRecording) {
-                recognition.stop();
             }
         }
 
@@ -998,8 +1045,7 @@ def serve_frontend():
         }
 
         // Event Listeners
-        startBtn.addEventListener('click', startRecording);
-        stopBtn.addEventListener('click', stopRecording);
+        recordBtn.addEventListener('click', toggleRecording);
         clearBtn.addEventListener('click', clearText);
         analyzeBtn.addEventListener('click', analyzeText);
 
