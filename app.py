@@ -933,35 +933,43 @@ def serve_frontend():
         }
 
         function displayResults(data) {
+            // Validate response data
+            if (!data || typeof data !== 'object') {
+                showError('Invalid response from server');
+                return;
+            }
+
             // Score
-            scoreValue.textContent = Math.round(data.overall_score * 100) + '%';
-            interpretation.textContent = data.interpretation;
-            interpretation.className = 'interpretation ' + data.interpretation_color;
+            scoreValue.textContent = Math.round((data.overall_score || 0) * 100) + '%';
+            interpretation.textContent = data.interpretation || 'Unknown';
+            interpretation.className = 'interpretation ' + (data.interpretation_color || 'moderate');
 
             // Highlighted text
             let html = '';
             let lastEnd = 0;
 
-            // Sort chunks by start index
-            const sortedChunks = [...data.chunks].sort((a, b) => a.start_index - b.start_index);
+            // Sort chunks by start index (handle missing chunks)
+            const chunks = data.chunks || [];
+            const sortedChunks = [...chunks].sort((a, b) => (a.start_index || 0) - (b.start_index || 0));
 
             for (const chunk of sortedChunks) {
                 // Add any text between chunks
                 if (chunk.start_index > lastEnd) {
-                    const betweenText = escapeHtml(data.text.slice(lastEnd, chunk.start_index));
+                    const betweenText = escapeHtml((data.text || '').slice(lastEnd, chunk.start_index));
                     html += betweenText;
                 }
 
                 // Add the chunk with appropriate highlighting
-                const chunkClass = getChunkClass(chunk.score);
-                html += `<span class="chunk ${chunkClass}" title="AI probability: ${Math.round(chunk.score * 100)}%">${escapeHtml(chunk.text)}</span>`;
+                const chunkClass = getChunkClass(chunk.score || 0);
+                html += `<span class="chunk ${chunkClass}" title="AI probability: ${Math.round((chunk.score || 0) * 100)}%">${escapeHtml(chunk.text || '')}</span>`;
 
-                lastEnd = chunk.end_index;
+                lastEnd = chunk.end_index || 0;
             }
 
             // Add any remaining text
-            if (lastEnd < data.text.length) {
-                html += escapeHtml(data.text.slice(lastEnd));
+            const textLen = (data.text || '').length;
+            if (lastEnd < textLen) {
+                html += escapeHtml((data.text || '').slice(lastEnd));
             }
 
             highlightedText.innerHTML = html;
